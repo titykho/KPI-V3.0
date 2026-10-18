@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keylargo-Verion3.0</title>
+    <link rel="stylesheet" href="./presentation.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.css" integrity="sha512-x9WwyMYBnlXMNQ6kQ/Lyzu1NqIhLQKL5Oq6xByfXuRj7s9CskyCbLv/1IjqzJmXwFXWr0ov6jBV7Qbc0hh9nHg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://cdn.jsdelivr.net/npm/dropbox@10.34.0/dist/Dropbox-sdk.min.js"></script>
+
+</head>
+<body>
+
+        <div class="permision" ">
+        <h1 style="text-align: center; margin :0px; background-color: white;"> Security
+            Registration
+        </h1>
+        <form id="MyPermssion" class="backpermission" onkeydown="return event.key !== 'Enter'" autocomplete="off">
+
+            <div class="formDisplay">
+                <label for="fname">First Name : </label>
+                <input type="text" class ="navp" name="userfname" id="fname" required placeholder="First Name"
+                    oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="formDisplay">
+                <label for="lname">Last Name : </label>
+                <input type="text" class ="navp" name="userlname" id="lname" required placeholder="Last Name"
+                    oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="formDisplay">
+                <label for="Email">Email : </label>
+                <input type="email" class ="navp" name="userEmail" id="Email" autocomplete="off" required
+                    pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                    title="Please enter a valid email address (e.g., user@example.com)" placeholder="email@yahoo.com">
+            </div>
+            <button class="pbuton" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class ="p-box-m">
+            <div class="navbar-1">
+                <div class="nav-input">
+                    <input type="text" class="nav-input2" id="mysearch" placeholder="Search Item No">     
+                    <button class = "btnx" onclick="saveclick()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>   
+                 
+
+                </div>
+
+                <div class="nav-choose">
+
+                    <div class = "nav-brand" onclick="toggleBrand()">Brand
+                        <div class="ListBrand" style="display: none;">
+                            <ul id="mybList" ></ul>
+                        </div>
+                    </div>
+
+                    <div class = "nav-category" onclick="toggleCategory()">Category
+                            <div class="ListCategory" style="display: none;"> 
+                                <ul id="mycList"></ul>
+                            </div>
+                    </div>         
+                </div>
+            </div>
+    
+        <div class="image">Product Version 3.0
+
+            </div>
+                <div id="customAlert" class="overlay">
+
+                    <div class="alert-box">   
+                        <div class="photoView">
+                            <img id="photoimg">
+                        </div>
+                        <div class="detailItems">
+                            <p id="p0"></p> 
+                            <p id="p1"></p>
+                            <p id="p2"></p>
+                            <p id="p3"></p>
+                            <p id="p4"></p>
+                            <p id="p5"></p>
+                        </div>   
+                        <div class="center-Btn">
+                            <button class="close-btn" onclick="closeCustomAlert()">CLOSE</button>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+    </div> 
+</body>
+<script src="./presentation.js"></script> 
+</html>
