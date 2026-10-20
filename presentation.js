@@ -37,6 +37,9 @@
                 const parseData = JSON.parse(storeData);
                 GetEmail = parseData.userEmail;
                 document.querySelector('.permision').style.display = 'none';
+                ///// localstore true else not functioning
+
+
                 loadDataPermit(GetEmail, myData);
 
             } catch (error) {
@@ -56,33 +59,53 @@
                         alldata.pricefor = 1;
                         alldata.terms = 0;
                         alldata.count = 1;
+                        alldata.permit = false;
                         alldata.date = new Date();
-                    
-                        alert(` Wait for your Approval of  "${alldata.userEmail}"`)
+                  //      alert(` Wait for your Approval of  "${alldata.userEmail}"`)
                         document.querySelector('.image').innerHTML= ` Wait for your Approval of  "${alldata.userEmail}"`;
                         document.querySelector('.permision').style.display = 'none';
         //  *******  server side
                         clearPermit = masterPermit.find(key1 => key1.userEmail === alldata.userEmail)
-                        if (clearPermit) {
-                            clearPermit.count += 1;
-                            if (clearPermit.count > 3){
-                                alert("you have more than 3 devices used..")
-                                return;
-                            }
-                            alert("twice  ")
-                            alldata.count = clearPermit.count;
-                            console.log("local storage  ",alldata);
-                            console.log("server  ",masterPermit)
-                    
-                            localStorage.setItem('MyPermision', JSON.stringify(alldata)) 
-                            uploadJsonWithFetch(masterPermit);
+                        if (clearPermit) {        /// edit specific value of object
+                                clearPermit.count += 1;
+                                clearPermit.permit = true;
+                                if (clearPermit.count > 3){
+                                    alert("You Have More Than 3 Devices Being Use Ask Your Administrator..");
+                                    return;
+                                }else{
+                                    uploadJsonWithFetch(masterPermit).then(result =>{
+                                         if(result) {
+                                            // console.log("true ", result)
+                                            alldata.count = clearPermit.count
+                                            alldata.permit = true;
+                                            localStorage.setItem('MyPermision', JSON.stringify(alldata))  
+                                         }
+                                         else {
+                                            // console.log("false", result)
+                                            // alert("dito ba eto " + result)
+                                            // alert("Ask Your Administrator Token is Expired....");
+                                            document.querySelector('.image').innerHTML= ` Ask Your Administrator Token is Expired! and to New  New Devices....`;
+                                            return;
+                                         }
+                                        });        
+                                    }
                         }else{
-                            alert("new dat")
-                            console.log(alldata)
-                            masterPermit.push(alldata);
-                            console.log(masterPermit)
-                            localStorage.setItem('MyPermision', JSON.stringify(alldata))
-                            uploadJsonWithFetch(masterPermit);
+                                uploadJsonWithFetch(masterPermit).then(result =>{ 
+                                    if(result) {
+ 
+                                        alldata.permit = true;
+                                         masterPermit.push(alldata); 
+                                         uploadJsonWithFetch(masterPermit)
+                                         localStorage.setItem('MyPermision', JSON.stringify(alldata))
+                                    }
+                                    else{
+                                        alldata.permit = false;
+                                        masterPermit.push(alldata);
+                                        alert("Ask Administrator Server is Close...")
+                                    
+                                       localStorage.setItem('MyPermision', JSON.stringify(alldata))
+                                    }
+                                });
                         }
                     }, {
                         once: true
@@ -100,15 +123,14 @@
                    // myfile2 = myfile.find(key => key.userEmail === xGetEmail);
                     let see = myfile.some(user => user.userEmail === xGetEmail && user.permission === true)
                     if (see === true) {
-                         myfile2 = myfile.find(key => key.userEmail === xGetEmail && key.permission === true)
-                        rPRICE = myfile2.pricefor;
-                        console.log(rPRICE)
-                        // alert("Success You Authorize to View.."+rPRICE);
-                        document.querySelector('.image').innerHTML= "You are Now Authorized to View..";
+                          myfile2 = myfile.find(key => key.userEmail === xGetEmail && key.permission === true)
+                          rPRICE = myfile2.pricefor;  /// price for adding cost  
+
+                         document.querySelector('.image').innerHTML= "You are Now Authorized to View..";
                           getJSONcategory();
                           getJSONbrand();
                           getJSONitems();
-                        return true
+                          return true
                     } else {
                         if (myfile.some(user => user.userEmail === xGetEmail && user.permission === false)) {
                             // window.alert("Wait for Permission Approval .......")
@@ -116,10 +138,11 @@
 
                         } else if (myfile.some(user => user.userEmail !== xGetEmail && user.permission === false)) {
 
-                            document.querySelector('.image').innerHTML= "Wait for Email : " + xGetEmail + " and Permission Approval .....";
-
+                            document.querySelector('.image').innerHTML= "Ask Your Admin for Email : " + xGetEmail + " and Permission Approval .....";
+                            mydata.permit = true;
                             myfile.push(mydata);
                             uploadJsonWithFetch(myfile);
+
                         } else {
                             document.querySelector('.image').innerHTML= "Wait for Approval For...";
                             // alert("Wait for Approval For..." + xGetEmail)
@@ -172,10 +195,12 @@
                 }
 
                 const result = await response.json();
-                console.log('File uploaded successfully via fetch!', result);
+                //console.log('File uploaded successfully via fetch!', result);
+                return true;
             } catch (error) {
                 console.error('Upload failed:', error);
-                alert("Token Accessible Has Expired ask Administrator..")
+                //alert("Token Accessible Has Expired ask Administrator..")
+                return false;
             }
          }
 
